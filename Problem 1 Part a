@@ -36,5 +36,5 @@ store_and_exit:
     la   $t7, fib_result
     sw   $t4, 0($t7)
 
-    # Exit (no syscall used)
+    # Exit
     j end
