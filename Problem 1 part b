@@ -1,0 +1,46 @@
+.data
+m_val:         .word 9          # Test value for m 
+odd_result:    .word 0          # 1 if odd, 0 if even
+
+.text
+.globl main
+
+main:
+    # Load m from memory
+    la   $t0, m_val
+    lw   $t1, 0($t0)            # $t1 = m
+
+    # Set divisor y = 2
+    li   $t2, 2                 # $t2 = 2
+
+    # Initialize x = m
+    move $t3, $t1               # $t3 = x (copy of m)
+
+div_loop:
+    # while x >= y then x = x - y
+    blt  $t3, $t2, div_done
+    sub  $t3, $t3, $t2
+    j    div_loop
+
+div_done:
+
+    li   $t4, 1
+    beq  $t3, $t4, store_one
+
+    # If not odd, store 0
+    li   $t5, 0
+    j    store_result
+
+store_one:
+    li   $t5, 1
+
+store_result:
+    #store the final result
+    la   $t6, odd_result
+    sw   $t5, 0($t6)
+
+    # Exit
+    j end
+
+end:
+    j end
