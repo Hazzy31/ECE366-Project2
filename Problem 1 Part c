@@ -1,0 +1,65 @@
+.data
+n_val:         .word 6
+fib_result:    .word 0
+is_odd_flag:   .word 0
+
+.text
+.globl main
+
+main:
+    la   $t0, n_val
+    lw   $t1, 0($t0)
+
+    li   $t2, 1
+    ble  $t1, $t2, store_n_and_continue
+
+    li   $t3, 0
+    li   $t4, 1
+    addi $t5, $t1, -1
+
+fib_loop:
+    beq  $t5, $zero, store_b_and_continue
+    move $t6, $t4
+    add  $t4, $t3, $t4
+    move $t3, $t6
+    addi $t5, $t5, -1
+    j fib_loop
+
+store_n_and_continue:
+    la   $t7, fib_result
+    sw   $t1, 0($t7)
+    j check_if_odd
+
+store_b_and_continue:
+    la   $t7, fib_result
+    sw   $t4, 0($t7)
+
+check_if_odd:
+    la   $s0, fib_result
+    lw   $s1, 0($s0)
+    li   $s2, 2
+    li   $s3, 0
+
+div_loop:
+    sub  $s1, $s1, $s2
+    blt  $s1, $zero, done_div
+    j div_loop
+
+done_div:
+    add  $s1, $s1, $s2
+    move $s3, $s1
+    li   $s4, 1
+    beq  $s3, $s4, set_true
+
+    la   $s5, is_odd_flag
+    sw   $zero, 0($s5)
+    j end_program
+
+set_true:
+    li   $t8, 1
+    la   $s5, is_odd_flag
+    sw   $t8, 0($s5)
+
+end_program:
+    li $v0, 10
+    syscall
